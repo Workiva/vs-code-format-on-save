@@ -84,20 +84,20 @@ class RunFormatOnSave {
 
 		if (this.useOverReactFormat) {
 			executable = 'pub'
-			args.push('run', 'over_react_format', `${fileName}`);
+			args.push('run', 'over_react_format', fileName);
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
 			} else {
-				args.push('-p', `${this.projectDir}`);
+				args.push('-p', this.projectDir);
 
-				if (shouldDetectLineLength && !shouldUseCustomLineLength) {
+				if (shouldDetectLineLength) {
 					args.push('--detect-line-length');
 				}
 			} 
 		} else {
 			// TODO add logic to detect line-length from dart_dev's config.dart
 			executable = 'dartfmt';
-			args.push('-w', `${fileName}`);
+			args.push('-w', fileName);
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
 			}
