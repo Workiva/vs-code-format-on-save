@@ -42,6 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 	return extension;
 }
 
+
 class RunFormatOnSave {
 	private context: vscode.ExtensionContext;
 	private config!: vscode.WorkspaceConfiguration;
@@ -61,7 +62,8 @@ class RunFormatOnSave {
 			const overReactFormatRangeIsValid = dependencyHasValidMinVersion(this.overReactFormatKey, this.minOverReactFormatVersion, readFileSync(`${this.projectDir}/pubspec.yaml`, 'utf-8'), true);
 
 			if (pubspecContainsOverReactFormat && !overReactFormatRangeIsValid) {
-				this.showChannelMessage(`OverReact Format range is not acceptable. Bump the minimum to 3.1.0 to use OverReact Format on Save.`);
+				this.showChannelMessage('over_react_format range is not compatible with OverReact Format on Save. ' +
+				'Bump the minimum to 3.1.0 to use over_react_format. Defaulting to using dartfmt instead.');
 			}
 			this.useOverReactFormat =  pubspecContainsOverReactFormat && overReactFormatRangeIsValid;
 		}
@@ -69,30 +71,42 @@ class RunFormatOnSave {
 		// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
 	}
 
-	buildCommand(fileName: string) {
-		let command:string;
-
+	startProcess(fileName: string) : process.ChildProcess {
 		const customLineLength = this.config.get<Number>('customLineLength', 0);
 		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
 		const shouldUseCustomLineLength = customLineLength > 0;
+		let executable : "pub" | "dartfmt";
+		const args : Array<string> = [];
+
 
 		if (shouldUseCustomLineLength && shouldDetectLineLength) {
 			this.showChannelMessage(`Both a custom line-length value and detectCustomLineLength set to true. Skipping line-length detection.`);
 		}
 
 		if (this.useOverReactFormat) {
+			executable = 'pub'
+			args.push('run', 'over_react_format', `${fileName}`);
 			if (shouldUseCustomLineLength) {
-				command =  `pub run over_react_format ${fileName} -l ${customLineLength}`;
+				args.push('-l', `${customLineLength}`);
 			} else {
-				const detectLineLengthFlag = shouldDetectLineLength && !shouldUseCustomLineLength ? "--detect-line-length" : "";
-				command =  `pub run over_react_format ${fileName} -p ${this.projectDir} ${detectLineLengthFlag}`;
+				args.push('-p', `${this.projectDir}`);
+
+				if (shouldDetectLineLength && !shouldUseCustomLineLength) {
+					args.push('--detect-line-length');
+				}
 			} 
 		} else {
 			// TODO add logic to detect line-length from dart_dev's config.dart
-			command = `dartfmt -w ${fileName} ${shouldUseCustomLineLength ? `-l ${customLineLength}` : ''}`;
+			executable = 'dartfmt';
+			args.push('-w', `${fileName}`);
+			if (shouldUseCustomLineLength) {
+				args.push('-l', `${customLineLength}`);
+			}
 		}
 
-		return command;
+		const command = `${executable} ${args.join(' ')}`;
+		this.showChannelMessage(command);
+		return process.execFile(executable, args, {cwd: this.projectDir});
 	}
 
 	loadConfig() {
@@ -130,11 +144,7 @@ class RunFormatOnSave {
 
 		this.showChannelMessage(`Running ${this.useOverReactFormat ? 'OverReact Format' : 'dartfmt'}...`);
 
-		const command = this.buildCommand(document.fileName); 
-
-		this.showChannelMessage(command);
-
-		const child:process.ChildProcess = process.exec(command, {cwd: this.projectDir});
+		const child:process.ChildProcess = this.startProcess(document.fileName);
 
 		child.stdout!.on('data', data => this.channel.append(data.toString()));
 		child.stderr!.on('data', data => this.channel.append(data.toString()));
