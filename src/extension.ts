@@ -42,7 +42,6 @@ export function activate(context: vscode.ExtensionContext) {
 	return extension;
 }
 
-
 class RunFormatOnSave {
 	private context: vscode.ExtensionContext;
 	private config!: vscode.WorkspaceConfiguration;
