@@ -62,8 +62,8 @@ class RunFormatOnSave {
 			const overReactFormatRangeIsValid = dependencyHasValidMinVersion(this.overReactFormatKey, this.minOverReactFormatVersion, readFileSync(`${this.projectDir}/pubspec.yaml`, 'utf-8'), true);
 
 			if (pubspecContainsOverReactFormat && !overReactFormatRangeIsValid) {
-				this.showChannelMessage('over_react_format range is not compatible with OverReact Format on Save. ' +
-				'Bump the minimum to 3.1.0 to use over_react_format. Defaulting to using dartfmt instead.');
+				this.showChannelMessage('over_react_format range is not compatible with OverReact Format on Save.'
+				+ ' Bump the minimum to 3.1.0 to use OverReact Format on Save. Defaulting to using dartfmt instead.');
 			}
 			this.useOverReactFormat =  pubspecContainsOverReactFormat && overReactFormatRangeIsValid;
 		}
