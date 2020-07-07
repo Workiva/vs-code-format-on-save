@@ -1,0 +1,9 @@
+version: 1
+
+raven_monitored_keywords:
+  \.exec\(:
+    languages:
+      - ts
+      - js
+    reason: RCE risk, prefer use of `execFile`
+    
