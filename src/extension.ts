@@ -88,7 +88,7 @@ class RunFormatOnSave {
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
 			} else {
-				args.push('-p', this.projectDir);
+				args.push('-p', this.getProjectPath(this.projectDir, fileName));
 
 				if (shouldDetectLineLength) {
 					args.push('--detect-line-length');
@@ -106,6 +106,23 @@ class RunFormatOnSave {
 		const command = `${executable} ${args.join(' ')}`;
 		this.showChannelMessage(command);
 		return process.execFile(executable, args, {cwd: this.projectDir});
+	}
+
+	getProjectPath(contentRoot : string, fileName : string) : string {
+		let currentPath : string = fileName;
+
+		while (currentPath !== contentRoot) {
+			const  parentOfCurrent = currentPath.split('').reverse();
+			parentOfCurrent.splice(0, currentPath.split('').reverse().findIndex((e) => e === '/') + 1)
+			const parentOfCurrent1 = parentOfCurrent.reverse().join('');
+			if (existsSync(`${parentOfCurrent1}/tool`)) {
+				return parentOfCurrent1;
+			}
+
+			currentPath = parentOfCurrent1;
+		}
+
+		return contentRoot;
 	}
 
 	loadConfig() {
