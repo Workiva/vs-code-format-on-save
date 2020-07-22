@@ -15,6 +15,7 @@
 import * as vscode from 'vscode';
 import * as process from 'child_process'
 import { existsSync, readFileSync } from 'fs';
+import * as path from 'path';
 
 import { devDependenciesContains, dependencyHasValidMinVersion } from './extension_utils';
 
@@ -112,14 +113,14 @@ class RunFormatOnSave {
 		let currentPath : string = fileName;
 
 		while (currentPath !== contentRoot) {
-			const  parentOfCurrent = currentPath.split('').reverse();
-			parentOfCurrent.splice(0, currentPath.split('').reverse().findIndex((e) => e === '/') + 1)
-			const parentOfCurrent1 = parentOfCurrent.reverse().join('');
-			if (existsSync(`${parentOfCurrent1}/tool`)) {
-				return parentOfCurrent1;
+			const splitPath = currentPath.split(path.sep);
+			splitPath.pop();
+			const parentOfCurrentDirectory = path.resolve(...splitPath)
+			if (existsSync(path.resolve(parentOfCurrentDirectory, 'tool'))) {
+				return parentOfCurrentDirectory;
 			}
 
-			currentPath = parentOfCurrent1;
+			currentPath = parentOfCurrentDirectory;
 		}
 
 		return contentRoot;
