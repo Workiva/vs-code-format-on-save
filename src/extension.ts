@@ -115,8 +115,9 @@ class RunFormatOnSave {
 		while (currentPath !== contentRoot) {
 			const splitPath = currentPath.split(path.sep);
 			splitPath.pop();
-			const parentOfCurrentDirectory = path.resolve(...splitPath)
-			if (existsSync(path.resolve(parentOfCurrentDirectory, 'tool'))) {
+			const parentOfCurrentDirectory = path.join('/', ...splitPath);
+			
+			if (existsSync(path.join(parentOfCurrentDirectory, 'tool'))) {
 				return parentOfCurrentDirectory;
 			}
 
