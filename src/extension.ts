@@ -15,6 +15,7 @@
 import * as vscode from 'vscode';
 import * as process from 'child_process'
 import { existsSync, readFileSync } from 'fs';
+import * as path from 'path';
 
 import { devDependenciesContains, dependencyHasValidMinVersion } from './extension_utils';
 
@@ -88,7 +89,7 @@ class RunFormatOnSave {
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
 			} else {
-				args.push('-p', this.projectDir);
+				args.push('-p', this.getProjectPath(this.projectDir, fileName));
 
 				if (shouldDetectLineLength) {
 					args.push('--detect-line-length');
@@ -106,6 +107,22 @@ class RunFormatOnSave {
 		const command = `${executable} ${args.join(' ')}`;
 		this.showChannelMessage(command);
 		return process.execFile(executable, args, {cwd: this.projectDir});
+	}
+
+	getProjectPath(contentRoot : string, fileName : string) : string {
+		let currentPath : string = fileName;
+
+		while (currentPath !== contentRoot) {
+			const parentOfCurrentDirectory = path.dirname(currentPath);
+			
+			if (existsSync(path.join(parentOfCurrentDirectory, 'tool'))) {
+				return parentOfCurrentDirectory;
+			}
+
+			currentPath = parentOfCurrentDirectory;
+		}
+
+		return contentRoot;
 	}
 
 	loadConfig() {
