@@ -41,6 +41,12 @@
 					"type": "boolean",
 					"description": "Attempt to autodetect custom line-length. If you are using Dart Dev have a `tool/dart_dev/config.dart` file with a custom line-length defined, you can set this to true to use that line-length.",
 					"default": true
+				},
+				"overReact.formatOnSave.scanForNestedProjects": {
+					"Title": "Scan for Nested Packages",
+					"type": "boolean",
+					"description": "Allows the extension to scan for pubspec.yaml files that are nested somewhere in the project (defaulting to the project root) when the formatter runs.\n\nSee the extension details for more information.",
+					"default": false
 				}
 			}
 		}

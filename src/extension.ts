@@ -64,13 +64,16 @@ class RunFormatOnSave {
 	}
 
 	startProcess(fileName: string) : process.ChildProcess {
+		// Config variables
 		const customLineLength = this.config.get<Number>('customLineLength', 0);
 		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
+		const shouldScanForNestedPackages = this.config.get<Boolean>('scanForNestedProjects');
+
 		const shouldUseCustomLineLength = customLineLength > 0;
 		let executable : "pub" | "dartfmt";
 		const args : Array<string> = [];
 
-		const projectPath = this.getProjectPath(this.projectDir, fileName);
+		const projectPath = shouldScanForNestedPackages ? this.getProjectPath(this.projectDir, fileName) : this.projectDir;
 
 		if (projectPath !== this.currentProjectDir) {
 			this.showChannelMessage('Detected a new current project... Re-processing the pubspec.yaml.');
