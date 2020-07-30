@@ -52,32 +52,53 @@ class RunFormatOnSave {
 	private projectDir = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders[0].uri.path : "";
 	private useOverReactFormat:Boolean = false; 
 
+	// The last project directory detected. 
+	// 
+	// This will either be equal to `projectDir` or a directory nested in `projectDir` that contains a `pubspec.yaml` file.
+	private currentProjectDir:string | null = null;
+
 	constructor(context: vscode.ExtensionContext) {
 		this.context = context;
 		this.loadConfig();
 		this.showEnablingChannelMessage();
-
-		if (existsSync(`${this.projectDir}/pubspec.yaml`)) {
-			const pubspecContainsOverReactFormat = devDependenciesContains(this.overReactFormatKey, readFileSync(`${this.projectDir}/pubspec.yaml`, 'utf-8'));
-			const overReactFormatRangeIsValid = dependencyHasValidMinVersion(this.overReactFormatKey, this.minOverReactFormatVersion, readFileSync(`${this.projectDir}/pubspec.yaml`, 'utf-8'), true);
-
-			if (pubspecContainsOverReactFormat && !overReactFormatRangeIsValid) {
-				this.showChannelMessage('over_react_format range is not compatible with OverReact Format on Save.'
-				+ ' Bump the minimum to 3.1.0 to use OverReact Format on Save. Defaulting to using dartfmt instead.');
-			}
-			this.useOverReactFormat =  pubspecContainsOverReactFormat && overReactFormatRangeIsValid;
-		}
-		// No else condition because there's no penalty for the project not being a Dart project.
-		// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
 	}
 
 	startProcess(fileName: string) : process.ChildProcess {
+		// Config variables
 		const customLineLength = this.config.get<Number>('customLineLength', 0);
 		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
+		const shouldScanForNestedPackages = this.config.get<Boolean>('scanForNestedProjects');
+
 		const shouldUseCustomLineLength = customLineLength > 0;
 		let executable : "pub" | "dartfmt";
 		const args : Array<string> = [];
 
+		const projectPath = shouldScanForNestedPackages ? this.getProjectPath(this.projectDir, fileName) : this.projectDir;
+
+		if (projectPath !== this.currentProjectDir) {
+			this.showChannelMessage('Detected a new current project... Re-processing the pubspec.yaml.');
+			this.currentProjectDir = projectPath;
+
+			// Even though `projectPath` most likely found a pubspec in at least the `projectDir`, there is still a possibility
+			// it doesn't exist because `getProjectPath` returns `projectDir` even if nothing is found.
+			if (existsSync(path.join(this.currentProjectDir, 'pubspec.yaml'))) {
+				const pubspecContainsOverReactFormat = devDependenciesContains(this.overReactFormatKey, readFileSync(`${this.currentProjectDir}/pubspec.yaml`, 'utf-8'));
+				const overReactFormatRangeIsValid = dependencyHasValidMinVersion(this.overReactFormatKey, this.minOverReactFormatVersion, readFileSync(`${this.currentProjectDir}/pubspec.yaml`, 'utf-8'), true);
+	
+				if (pubspecContainsOverReactFormat && !overReactFormatRangeIsValid) {
+					this.showChannelMessage('over_react_format range is not compatible with OverReact Format on Save.'
+					+ ' Bump the minimum to 3.1.0 to use OverReact Format on Save. Defaulting to using dartfmt instead.');
+				}
+				this.useOverReactFormat =  pubspecContainsOverReactFormat && overReactFormatRangeIsValid;
+			// If this is hit, the detected package file has change but contains no pubspec and therefore should always use `dartfmt`.
+			} else if (this.useOverReactFormat) {
+				this.useOverReactFormat = false;
+			}
+			// No else condition because there's no penalty for the project not being a Dart project.
+			// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
+		}
+
+		this.showChannelMessage(`Running ${this.useOverReactFormat ? 'OverReact Format' : 'dartfmt'}...`);
 
 		if (shouldUseCustomLineLength && shouldDetectLineLength) {
 			this.showChannelMessage(`Both a custom line-length value and detectCustomLineLength set to true. Skipping line-length detection.`);
@@ -89,7 +110,7 @@ class RunFormatOnSave {
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
 			} else {
-				args.push('-p', this.getProjectPath(this.projectDir, fileName));
+				args.push('-p', this.currentProjectDir);
 
 				if (shouldDetectLineLength) {
 					args.push('--detect-line-length');
@@ -106,7 +127,7 @@ class RunFormatOnSave {
 
 		const command = `${executable} ${args.join(' ')}`;
 		this.showChannelMessage(command);
-		return process.execFile(executable, args, {cwd: this.projectDir});
+		return process.execFile(executable, args, {cwd: this.currentProjectDir});
 	}
 
 	getProjectPath(contentRoot : string, fileName : string) : string {
@@ -115,7 +136,7 @@ class RunFormatOnSave {
 		while (currentPath !== contentRoot) {
 			const parentOfCurrentDirectory = path.dirname(currentPath);
 			
-			if (existsSync(path.join(parentOfCurrentDirectory, 'tool'))) {
+			if (existsSync(path.join(parentOfCurrentDirectory, 'pubspec.yaml'))) {
 				return parentOfCurrentDirectory;
 			}
 
@@ -157,8 +178,6 @@ class RunFormatOnSave {
 		if (!this.getEnabled() || document.languageId !== 'dart') {
 			return;
 		}
-
-		this.showChannelMessage(`Running ${this.useOverReactFormat ? 'OverReact Format' : 'dartfmt'}...`);
 
 		const child:process.ChildProcess = this.startProcess(document.fileName);
 
