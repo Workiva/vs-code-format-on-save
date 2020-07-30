@@ -90,6 +90,9 @@ class RunFormatOnSave {
 					+ ' Bump the minimum to 3.1.0 to use OverReact Format on Save. Defaulting to using dartfmt instead.');
 				}
 				this.useOverReactFormat =  pubspecContainsOverReactFormat && overReactFormatRangeIsValid;
+			// If this is hit, the detected package file has change but contains no pubspec and therefore should always use `dartfmt`.
+			} else if (this.useOverReactFormat) {
+				this.useOverReactFormat = false;
 			}
 			// No else condition because there's no penalty for the project not being a Dart project.
 			// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
