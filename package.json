@@ -2,7 +2,7 @@
 	"name": "over-react-format-on-save",
 	"displayName": "OverReact Format on Save",
 	"description": "A Dart project formatting tool that enables formatting on file save. Attempts to use OverReact Format but defaults to dartfmt.",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"publisher": "Workiva",
 	"repository": "https://github.com/Workiva/vs-code-format-on-save/",
 	"engines": {
@@ -12,7 +12,7 @@
 		"Other"
 	],
 	"activationEvents": [
-		"*"
+		"onLanguage:dart"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -47,6 +47,12 @@
 					"type": "boolean",
 					"description": "Allows the extension to scan for pubspec.yaml files that are nested somewhere in the project (defaulting to the project root) when the formatter runs.\n\nSee the extension details for more information.",
 					"default": false
+				},
+				"overReact.formatOnSave.showOutputOnError": {
+					"Title": "Show output console when error occurs in formatter",
+					"type": "boolean",
+					"description": "By default the extension will show the output console when an error occurs in the formatter. This can be disabled.",
+					"default": true
 				}
 			}
 		}

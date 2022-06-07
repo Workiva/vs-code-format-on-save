@@ -186,11 +186,14 @@ class RunFormatOnSave {
 
 		child.on('exit', (e) => {
 			if (e === 0) {
-				this.showStatusMessage('Formatting succeeded');
-			}
+				this.showStatusMessage('OverReact formatting succeeded');
+			} else {
+				this.showStatusMessage('OverReact formatting failed');
 
-			if (e !== 0) {
-				this.channel.show(true);
+				const shouldShowOutputOnError = this.config.get<Boolean>('showOutputOnError');
+				if (shouldShowOutputOnError) {
+					this.channel.show(true);
+				}
 			}
 		});
 	}
