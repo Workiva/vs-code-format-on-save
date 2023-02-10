@@ -70,7 +70,7 @@ class RunFormatOnSave {
 		const shouldScanForNestedPackages = this.config.get<Boolean>('scanForNestedProjects');
 
 		const shouldUseCustomLineLength = customLineLength > 0;
-		let executable : "pub" | "dartfmt";
+		let executable : "dart" | "dartfmt";
 		const args : Array<string> = [];
 
 		const projectPath = shouldScanForNestedPackages ? this.getProjectPath(this.projectDir, fileName) : this.projectDir;
@@ -105,7 +105,7 @@ class RunFormatOnSave {
 		}
 
 		if (this.useOverReactFormat) {
-			executable = 'pub'
+			executable = 'dart'
 			args.push('run', 'over_react_format', fileName);
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
