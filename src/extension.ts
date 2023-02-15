@@ -70,7 +70,7 @@ class RunFormatOnSave {
 		const shouldScanForNestedPackages = this.config.get<Boolean>('scanForNestedProjects');
 
 		const shouldUseCustomLineLength = customLineLength > 0;
-		let executable : "dart" | "dartfmt";
+		const executable = 'dart';
 		const args : Array<string> = [];
 
 		const projectPath = shouldScanForNestedPackages ? this.getProjectPath(this.projectDir, fileName) : this.projectDir;
@@ -98,14 +98,13 @@ class RunFormatOnSave {
 			// The `onDocumentSave` command will just be short-circuited if it is run on non-Dart files.
 		}
 
-		this.showChannelMessage(`Running ${this.useOverReactFormat ? 'OverReact Format' : 'dartfmt'}...`);
+		this.showChannelMessage(`Running ${this.useOverReactFormat ? 'OverReact Format' : 'dart format'}...`);
 
 		if (shouldUseCustomLineLength && shouldDetectLineLength) {
 			this.showChannelMessage(`Both a custom line-length value and detectCustomLineLength set to true. Skipping line-length detection.`);
 		}
 
 		if (this.useOverReactFormat) {
-			executable = 'dart'
 			args.push('run', 'over_react_format', fileName);
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
@@ -118,8 +117,7 @@ class RunFormatOnSave {
 			} 
 		} else {
 			// TODO add logic to detect line-length from dart_dev's config.dart
-			executable = 'dartfmt';
-			args.push('-w', fileName);
+			args.push('format', fileName);
 			if (shouldUseCustomLineLength) {
 				args.push('-l', `${customLineLength}`);
 			}
@@ -127,7 +125,9 @@ class RunFormatOnSave {
 
 		const command = `${executable} ${args.join(' ')}`;
 		this.showChannelMessage(command);
-		return process.execFile(executable, args, {cwd: this.currentProjectDir});
+		return process.execFile(executable, args, {cwd: this.currentProjectDir}).on('error', (e) => {
+			this.showChannelMessage(`error encountered: ${e}`);
+		});
 	}
 
 	getProjectPath(contentRoot : string, fileName : string) : string {
