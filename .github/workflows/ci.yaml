@@ -28,7 +28,7 @@ jobs:
 
       - name: Copy Source Code
         run: |
-          mkdir -p /usr/src/extension
+          sudo mkdir -p /usr/src/extension
           cp -R ./* /usr/src/extension/
           cd /usr/src/extension
 
