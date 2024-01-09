@@ -38,8 +38,8 @@ jobs:
 
       - name: Install Yarn and Dependencies
         run: |
-          npm install yarn -g
-          yarn install
+          sudo npm install yarn -g
+          sudo yarn install
           yarn compile
           yarn lint
         working-directory: /usr/src/extension
