@@ -34,6 +34,13 @@ jobs:
           sudo apt update -y
           sudo apt upgrade -y
 
+      - name: Install Yarn and Dependencies
+        run: |
+          npm install yarn -g
+          yarn install
+          yarn compile
+          yarn lint
+
       - name: Clean Up
         run: |
           sudo apt autoremove -y
