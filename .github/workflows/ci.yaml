@@ -16,6 +16,7 @@ jobs:
 
       - name: Set up Working Directory
         run: sudo mkdir -p /usr/src/extension && sudo cp -R ./* /usr/src/extension
+        working-directory: /usr/src/extension
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -46,3 +47,6 @@ jobs:
           sudo apt autoremove -y
           sudo apt clean all
           sudo rm -rf /var/cache/apt
+
+      - name: Set User to Nobody
+        run: sudo chown -R nobody:nobody /usr/src/extension
