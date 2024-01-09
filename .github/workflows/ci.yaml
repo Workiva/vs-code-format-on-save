@@ -11,13 +11,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Working Directory
-        run: mkdir -p /usr/src/extension && cp -R ./* /usr/src/extension
-        working-directory: /usr/src/extension
+        run: sudo mkdir -p /usr/src/extension && sudo cp -R ./* /usr/src/extension
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -30,12 +28,12 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo yum install -y gzip tar
-          sudo yum update -y
-          sudo yum upgrade -y
+          sudo apt install -y gzip tar
+          sudo apt update -y
+          sudo apt upgrade -y
 
       - name: Clean Up
         run: |
-          sudo yum autoremove -y
-          sudo yum clean all
-          sudo rm -rf /var/cache/yum
+          sudo apt autoremove -y
+          sudo apt clean all
+          sudo rm -rf /var/cache/apt
