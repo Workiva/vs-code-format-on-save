@@ -29,12 +29,12 @@ jobs:
       - name: Copy Source Code
         run: |
           sudo mkdir -p /usr/src/extension
-          cp -R ./* /usr/src/extension/
-          cd /usr/src/extension
+          sudo cp -R ./* /usr/src/extension/
+          sudo cd /usr/src/extension
 
       - name: Install NVM
         run: |
-          nvm install 17
+          sudo nvm install 17
 
       - name: Build and Lint
         run: |
