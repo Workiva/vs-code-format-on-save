@@ -40,8 +40,8 @@ jobs:
         run: |
           sudo npm install yarn -g
           sudo yarn install
-          yarn compile
-          yarn lint
+          sudo yarn compile
+          sudo yarn lint
         working-directory: /usr/src/extension
 
       - name: Clean Up
