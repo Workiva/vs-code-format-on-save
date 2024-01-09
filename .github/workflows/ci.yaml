@@ -14,8 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create working Directory
-        run: sudo mkdir -p /usr/src/extension && sudo cp -R ./* /usr/src/extension
+      - name: Setup working Directory
+        run: |
+          sudo mkdir -p /usr/src/extension
+          sudo cp -R ./* /usr/src/extension
+          cd /usr/src/extension
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -27,14 +30,12 @@ jobs:
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
           . ~/.nvm/nvm.sh
           nvm install 17
-        working-directory: /usr/src/extension
 
       - name: Install Dependencies
         run: |
           sudo apt install -y gzip tar
           sudo apt update -y
           sudo apt upgrade -y
-        working-directory: /usr/src/extension
 
       - name: Install Yarn and Dependencies
         run: |
@@ -42,14 +43,12 @@ jobs:
           sudo yarn install
           sudo yarn compile
           sudo yarn lint
-        working-directory: /usr/src/extension
 
       - name: Clean Up
         run: |
           sudo apt autoremove -y
           sudo apt clean all
           sudo rm -rf /var/cache/apt
-        working-directory: /usr/src/extension
 
       - name: Set User to Nobody
         run: sudo chown -R nobody:nobody /usr/src/extension
