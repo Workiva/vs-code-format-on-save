@@ -16,4 +16,14 @@ RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | b
 
 ARG BUILD_ID
 
+RUN yum update -y && \
+
+    yum upgrade -y && \
+
+    yum autoremove -y && \
+
+    yum clean all && \
+
+    rm -rf /var/cache/yum \
+
 USER nobody
