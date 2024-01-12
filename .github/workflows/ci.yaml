@@ -8,14 +8,12 @@ on:
     branches:
       - '**'
 
-permissions:
-  id-token: write
-  contents: read
-  checks: write
-
 jobs:
   build:
-    runs-on: [self-hosted, large]
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
@@ -30,15 +28,10 @@ jobs:
         with:
           node-version: '17'
 
-      - name: Setup Credentials
-        uses: Workiva/gha-setup-credentials@v1.0.26
+      - run: mkdir -p test-reports/artifacts
 
-      - run: sudo mkdir test-reports/
-
-      - name: Store Artifacts
-        uses: Workiva/gha-store-artifacts@v1.1.3
-
-      - name: Upload Test Artifacts
-        uses: Workiva/gha-upload-test-reports@v1.0.3
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v2
         with:
-          test-reports: test-reports/
+          name: Artifacts
+          path: test-reports/artifacts
