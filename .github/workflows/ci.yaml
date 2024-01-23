@@ -1,39 +1,77 @@
-name: Dart CI
+name: build
 
 on:
+  workflow_call:
+  workflow_dispatch:
   push:
     branches:
       - 'master'
+    tags:
+      - '*'
   pull_request:
     branches:
       - '**'
+  release:
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   build:
-    permissions:
-      id-token: write
-      contents: read
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Setup working Directory
-        run: |
-          sudo mkdir -p /usr/src/extension
-          sudo cp -R ./* /usr/src/extension
-          cd /usr/src/extension
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '17'
+          node-version: 17
+      - name: install dependencies
+        run: |
+          npm install yarn -g
+          yarn install
 
-      - run: |
-          mkdir -p artifacts
-          echo "" > artifacts/file.txt
+      - name: Compile
+        run: yarn compile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: What is the OS
+        run: cat /etc/*-release
+
+      # Tests if using Linux
+      - name: install xvfb
+        run: sudo yum -y install xorg-x11-server-Xvfb
+        if: runner.os == 'Linux'
+
+      - name: Run Tests and Generate XML Report
+        run: xvfb-run -a yarn test
+        if: runner.os == 'Linux'
+
+      # Tests if not using Linux
+      - name: Non-Linux Tests
+        run: yarn test
+        if: runner.os != 'Linux'
+
+      - name: Debug Path
+        run: ls -R out
+
+      - name: Upload XML Test Report
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-reports
+          path: out/test
+
+      - name: Upload Test Artifacts to Skynet
+        uses: Workiva/gha-upload-test-reports@v1.0.19
+
+      # Generate vsix file and upload the artifact
+      - name: generate .vsix file
+        run: yarn package
 
       - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+        uses: Workiva/gha-store-artifacts@refs/tags/v1.0.20
         with:
-          name: Artifacts
-          path: artifacts/file.txt
+          GITHUB_RELEASE_ASSETS: "vs-code-format-on-save.vsix"
