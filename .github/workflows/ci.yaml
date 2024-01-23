@@ -64,14 +64,12 @@ jobs:
           name: test-reports
           path: out/test
 
-      - name: Upload Test Artifacts to Skynet
-        uses: Workiva/gha-upload-test-reports@v1.0.19
-
       # Generate vsix file and upload the artifact
       - name: generate .vsix file
         run: yarn package
 
       - name: Upload Artifacts
-        uses: Workiva/gha-store-artifacts@refs/tags/v1.0.20
+        uses: actions/upload-artifact@v4
         with:
-          GITHUB_RELEASE_ASSETS: "vs-code-format-on-save.vsix"
+          name: Artifacts
+          path: vs-code-format-on-save.vsix
