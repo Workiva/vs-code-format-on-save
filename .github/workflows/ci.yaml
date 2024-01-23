@@ -1,0 +1,80 @@
+name: build
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'master'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - '**'
+  release:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17
+      - name: install dependencies
+        run: |
+          yarn install
+
+      - name: Compile
+        run: yarn compile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: What is the OS
+        run: cat /etc/*-release
+
+      # Tests if using Linux
+      - name: install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+        if: runner.os == 'Linux'
+
+      - name: Run Tests and Generate XML Report
+        run: xvfb-run -a yarn test
+        if: runner.os == 'Linux'
+
+      # Tests if not using Linux
+      - name: Non-Linux Tests
+        run: yarn test
+        if: runner.os != 'Linux'
+
+      - name: Debug Path
+        run: ls -R out
+
+      - name: Upload XML Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: out/test
+
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifacts
+          path: artifacts/file.txt
+
+      # Generate vsix file and upload the artifact
+      - name: generate .vsix file
+        run: yarn package
+
+      - name: Upload .vsix Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vs-code-extension
+          path: "*.vsix"
