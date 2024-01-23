@@ -29,7 +29,6 @@ jobs:
           node-version: 17
       - name: install dependencies
         run: |
-          npm install yarn -g
           yarn install
 
       - name: Compile
@@ -72,9 +71,7 @@ jobs:
 
       # Generate vsix file and upload the artifact
       - name: generate .vsix file
-        run: |
-          ls -alsh
-          yarn package
+        run: yarn package
 
       - name: Upload .vsix Artifact
         uses: actions/upload-artifact@v2
