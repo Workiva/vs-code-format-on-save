@@ -43,7 +43,7 @@ jobs:
 
       # Tests if using Linux
       - name: install xvfb
-        run: sudo yum -y install xorg-x11-server-Xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
         if: runner.os == 'Linux'
 
       - name: Run Tests and Generate XML Report
@@ -64,12 +64,18 @@ jobs:
           name: test-reports
           path: out/test
 
+      - name: Upload Test Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Artifacts
+          path: artifacts/file.txt
+
       # Generate vsix file and upload the artifact
       - name: generate .vsix file
         run: yarn package
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload .vsix Artifact
+        uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
-          path: vs-code-format-on-save.vsix
+          name: vs-code-extension
+          path: "*.vsix"
