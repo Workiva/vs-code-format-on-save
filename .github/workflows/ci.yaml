@@ -58,7 +58,7 @@ jobs:
         run: ls -R out
 
       - name: Upload XML Test Report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: out/test
@@ -74,7 +74,7 @@ jobs:
         run: yarn package
 
       - name: Upload .vsix Artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: vs-code-extension
           path: "*.vsix"
