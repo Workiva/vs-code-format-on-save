@@ -14,7 +14,8 @@ on:
   release:
 
 permissions:
-  contents: read
+  pull-requests: write
+  contents: write
   id-token: write
 
 jobs:
@@ -78,3 +79,9 @@ jobs:
         with:
           name: vs-code-extension
           path: "*.vsix"
+
+      - name: Generate SBOM
+        uses: anchore/sbom-action@v0
+        with:
+          path: ./
+          format: cyclonedx-json
