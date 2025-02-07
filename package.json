@@ -66,11 +66,16 @@
 		"package": "vsce package -o ./vs-code-format-on-save.vsix"
 	},
 	"icon": "images/OverReact_Logo.png",
+	"dependencies": {
+		"semver": "^7.5.2",
+		"yaml": "^1.10.0"
+	},
 	"devDependencies": {
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
 		"@types/vscode": "^1.44.0",
+		"@types/semver": "^7.2.0",
 		"@typescript-eslint/eslint-plugin": "^3.1.0",
 		"@typescript-eslint/parser": "^3.1.0",
 		"eslint": "^6.8.0",
@@ -79,10 +84,5 @@
 		"typescript": "^3.8.3",
 		"vscode-test": "^1.3.0",
 		"@vscode/vsce": "^2.19.0"
-	},
-	"dependencies": {
-		"@types/semver": "^7.2.0",
-		"semver": "^7.5.2",
-		"yaml": "^1.10.0"
 	}
 }
