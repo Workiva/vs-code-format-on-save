@@ -28,15 +28,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 17
-      - name: install dependencies
-        run: |
-          yarn install
+
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: true
 
       - name: Compile
-        run: yarn compile
+        run: pnpm run compile
 
       - name: Lint
-        run: yarn lint
+        run: pnpm run lint
 
       - name: What is the OS
         run: cat /etc/*-release
@@ -47,12 +48,12 @@ jobs:
         if: runner.os == 'Linux'
 
       - name: Run Tests and Generate XML Report
-        run: xvfb-run -a yarn test
+        run: xvfb-run -a pnpm run test
         if: runner.os == 'Linux'
 
       # Tests if not using Linux
       - name: Non-Linux Tests
-        run: yarn test
+        run: pnpm run test
         if: runner.os != 'Linux'
 
       - name: Debug Path
@@ -72,7 +73,7 @@ jobs:
 
       # Generate vsix file and upload the artifact
       - name: generate .vsix file
-        run: yarn package
+        run: pnpm run package
 
       - name: Upload .vsix Artifact
         uses: actions/upload-artifact@v4
