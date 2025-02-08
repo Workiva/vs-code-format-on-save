@@ -69,7 +69,7 @@ class RunFormatOnSave {
 		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
 		const shouldScanForNestedPackages = this.config.get<Boolean>('scanForNestedProjects');
 
-		const shouldUseCustomLineLength = customLineLength > 0;
+		const shouldUseCustomLineLength = customLineLength > new Number(0);
 		const executable = 'dart';
 		const args : Array<string> = [];
 

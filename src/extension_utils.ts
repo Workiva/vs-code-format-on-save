@@ -13,38 +13,37 @@
 // limitations under the License.
 import * as yaml from 'yaml';
 import { satisfies, minVersion, parse } from 'semver';
-import { isString } from 'util';
 
 const dependencyKey = 'dependencies';
 const devDependencyKey = 'dev_dependencies';
 
-function getDependencyVersion(document:yaml.Document, dependency:string, isADevDependency:boolean = false):string|undefined {
+function getDependencyVersion(pubspec: {[key: string]: any}, dependency: string, isADevDependency: boolean = false): string | undefined {
     const key = isADevDependency ? devDependencyKey : dependencyKey;
-    if (document.contents.has(key)) {
-        const dependencyCollection = document.contents.get(key);
-        if (dependencyCollection !== null && dependencyCollection.has(dependency)) {
-            const collectedDependency = dependencyCollection.get(dependency);
+
+    let collectedDependency = (pubspec[key] ?? {})[dependency];
+    if (collectedDependency == null) return undefined;
     
-            // Simple key value dependencies (e.g. not hosted ones) are simple
-            // strings here. Otherwise, we need to do `get` one more time.
-            if (isString(collectedDependency)) {
-                return collectedDependency;
-            } else {
-                return collectedDependency.get('version');
-            }
-        }
+    // Simple key value dependencies (e.g. not hosted ones) are simple
+    // strings here. Otherwise, we need to do `get` one more time.
+    if (typeof collectedDependency == 'string') {
+        return collectedDependency;
     }
 
-    return undefined;
+    return collectedDependency['version']
 }
 
 // Verifies that a provided dependency is present and has a minimum version that matches a given dependency range.
 //
 // Returns false if the dependency does not exist, is invalid, or is below the provided range.
 // Expects `dependency` to be the exact dependency string, `qualifyingRange` to be a compatible semver range.
-export function dependencyHasValidMinVersion(dependency:string, qualifyingRange:string, pubspecContents:string, isADevDependency:boolean = false):Boolean {
-    const pubspec:yaml.Document = yaml.parseDocument(pubspecContents);
-    const rawRange:string|undefined = getDependencyVersion(pubspec, dependency, isADevDependency);
+export function dependencyHasValidMinVersion(
+    dependency: string, 
+    qualifyingRange: string, 
+    pubspecContents: string, 
+    isADevDependency: boolean = false,
+): boolean {
+    const pubspec = yaml.parse(pubspecContents);
+    const rawRange = getDependencyVersion(pubspec, dependency, isADevDependency);
     if (rawRange === undefined) return false;
     const minRangeValue = parse(minVersion(rawRange));
     if (minRangeValue === null) return false;
@@ -54,14 +53,10 @@ export function dependencyHasValidMinVersion(dependency:string, qualifyingRange:
 
 // Checks a dependency against a pubspec.yaml's dev_dependency section and returns whether
 // or not it is present. 
-export function devDependenciesContains(dependency:string, pubspecContents:string):Boolean {
-    const pubspec:yaml.Document = yaml.parseDocument(pubspecContents);
-    if (pubspec.contents.has(devDependencyKey)) {
-        const dev_dependencies = pubspec.contents.get(devDependencyKey);
-        if (dev_dependencies !== null) {
-            return dev_dependencies.has(dependency);
-        }
-    }
+export function devDependenciesContains(dependency: string, pubspecContents: string): boolean {
+    const pubspec: {[key: string]: any} = yaml.parse(pubspecContents);
 
-    return false;
+    if (pubspec[devDependencyKey] == null) return false;
+
+    return pubspec[devDependencyKey].hasOwnProperty(dependency)
 }
