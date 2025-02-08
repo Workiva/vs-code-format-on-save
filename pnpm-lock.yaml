@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      yaml:
-        specifier: ^2.7.0
-        version: 2.7.0
     devDependencies:
       '@types/node':
         specifier: 20.x
@@ -38,11 +34,6 @@ packages:
   undici-types@6.19.8:
     resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
 
-  yaml@2.7.0:
-    resolution: {integrity: sha512-+hSoy/QHluxmC9kCIJyL/uyFmLmc+e5CFR5Wa+bpIhIj85LVb9ZH2nVnqrHoSvKogwODv0ClqZkmiSSaIH5LTA==}
-    engines: {node: '>= 14'}
-    hasBin: true
-
 snapshots:
 
   '@types/node@20.17.17':
@@ -54,5 +45,3 @@ snapshots:
   typescript@5.7.3: {}
 
   undici-types@6.19.8: {}
-
-  yaml@2.7.0: {}
