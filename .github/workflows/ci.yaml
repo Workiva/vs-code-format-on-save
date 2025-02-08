@@ -33,7 +33,7 @@ jobs:
       - run: pnpm install
 
       - name: generate .vsix file
-        run: npx @vscode/vsce --no-dependencies
+        run: pnpm package
 
       - name: Upload .vsix Artifact
         uses: actions/upload-artifact@v4
