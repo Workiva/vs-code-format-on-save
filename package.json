@@ -60,7 +60,6 @@
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/run_tests.js",
 		"package": "vsce package -o ./vs-code-format-on-save.vsix"
@@ -75,11 +74,8 @@
 		"@types/node": "^22.13.1",
 		"@types/semver": "^7.5.8",
 		"@types/vscode": "^1.97.0",
-		"@typescript-eslint/eslint-plugin": "^8.23.0",
-		"@typescript-eslint/parser": "^8.23.0",
 		"@vscode/test-electron": "^2.4.1",
 		"@vscode/vsce": "^3.2.2",
-		"eslint": "^9.19.0",
 		"glob": "^11.0.1",
 		"mocha": "^11.1.0",
 		"typescript": "^5.7.3"
