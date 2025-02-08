@@ -2,7 +2,6 @@ import * as vscode from 'vscode';
 import { execFile } from "child_process";
 import {join} from 'path';
 import { existsSync, readFileSync } from 'fs';
-import YAML from 'yaml'
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -14,9 +13,8 @@ export function activate(context: vscode.ExtensionContext) {
 	let hasDartDev = false;
 	let pubspecPath = join(folder, 'pubspec.yaml');
 	if (existsSync(pubspecPath)) {
-		let pubspec = YAML.parse(readFileSync(pubspecPath).toString())
-
-		hasDartDev = pubspec['dev_dependencies']['dart_dev'] != null;
+		let pubspec = readFileSync(pubspecPath).toString();
+		hasDartDev = pubspec.includes('  dart_dev:');
 	}
 
 	let dartBinaryPath: string

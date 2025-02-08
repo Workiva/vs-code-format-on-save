@@ -18,19 +18,13 @@
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
-		"lint": "eslint src",
 		"watch": "tsc -watch -p ./",
-		"test": "node ./out/test/run_tests.js",
-		"package": "vsce package -o ./vs-code-format-on-save.vsix"
+		"package": "vsce package --no-dependencies -o ./vs-code-format-on-save.vsix"
 	},
 	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {
 		"@types/node": "20.x",
 		"@types/vscode": "^1.97.0",
-		"@vscode/vsce": "^3.2.2",
 		"typescript": "^5.7.3"
-	},
-	"dependencies": {
-		"yaml": "^2.7.0"
 	}
 }
