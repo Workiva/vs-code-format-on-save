@@ -6,83 +6,26 @@
 	"publisher": "Workiva",
 	"repository": "https://github.com/Workiva/vs-code-format-on-save/",
 	"engines": {
-		"vscode": "^1.44.0"
+		"vscode": "^1.97.0"
 	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onLanguage:dart"
-	],
+	"categories": ["Other"],
+	"activationEvents": ["onLanguage:dart"],
 	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [
-			{
-				"command": "overReactFormatOnSave.enableOverReactFormatOnSave",
-				"title": "OverReact Format On Save: Enable"
-			},
-			{
-				"command": "overReactFormatOnSave.disableOverReactFormatOnSave",
-				"title": "OverReact Format On Save: Disable"
-			}
-		],
-		"configuration": {
-			"title": "OverReact Format On Save",
-			"type": "object",
-			"properties": {
-				"overReact.formatOnSave.customLineLength": {
-					"Title": "Custom Line-Length",
-					"type": "number",
-					"description": "The line-length the formatter should use. Note that both this and `Detect Custom Line-Length` cannot be set at the same time. If this is set (i.e. greater than 0) and `Detect Custom Line-Length` is `true`, this property will take precedence.",
-					"minimum": 0
-				},
-				"overReact.formatOnSave.detectCustomLineLength": {
-					"Title": "Detect Custom Line-Length",
-					"type": "boolean",
-					"description": "Attempt to autodetect custom line-length. If you are using Dart Dev have a `tool/dart_dev/config.dart` file with a custom line-length defined, you can set this to true to use that line-length.",
-					"default": true
-				},
-				"overReact.formatOnSave.scanForNestedProjects": {
-					"Title": "Scan for Nested Packages",
-					"type": "boolean",
-					"description": "Allows the extension to scan for pubspec.yaml files that are nested somewhere in the project (defaulting to the project root) when the formatter runs.\n\nSee the extension details for more information.",
-					"default": false
-				},
-				"overReact.formatOnSave.showOutputOnError": {
-					"Title": "Show output console when error occurs in formatter",
-					"type": "boolean",
-					"description": "By default the extension will show the output console when an error occurs in the formatter. This can be disabled.",
-					"default": true
-				}
-			}
-		}
-	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
-		"lint": "eslint src --ext ts",
+		"lint": "eslint src",
 		"watch": "tsc -watch -p ./",
 		"test": "node ./out/test/run_tests.js",
 		"package": "vsce package -o ./vs-code-format-on-save.vsix"
 	},
 	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^7.0.2",
-		"@types/node": "^13.11.0",
-		"@types/vscode": "^1.44.0",
-		"@typescript-eslint/eslint-plugin": "^3.1.0",
-		"@typescript-eslint/parser": "^3.1.0",
-		"eslint": "^6.8.0",
-		"glob": "^7.1.6",
-		"mocha": "^7.1.1",
-		"typescript": "^3.8.3",
-		"vscode-test": "^1.3.0",
-		"@vscode/vsce": "^2.19.0"
+		"@types/node": "20.x",
+		"@types/vscode": "^1.97.0",
+		"typescript": "^5.7.3"
 	},
 	"dependencies": {
-		"@types/semver": "^7.2.0",
-		"semver": "^7.5.2",
-		"yaml": "^1.10.0"
+		"yaml": "^2.7.0"
 	}
 }
