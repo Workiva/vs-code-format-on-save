@@ -1,4 +1,4 @@
-import { ChildProcess, ChildProcessWithoutNullStreams, spawn } from "child_process";
+import { ChildProcess, spawn } from "child_process";
 import { FormatRunner } from "./format_runner";
 
 export class OverReactFormatRunner implements FormatRunner {
