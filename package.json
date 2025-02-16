@@ -24,11 +24,13 @@
 	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {
 		"@types/node": "20.x",
+		"@types/semver": "^7.5.8",
 		"@types/vscode": "^1.97.0",
 		"@vscode/vsce": "^3.2.2",
 		"typescript": "^5.7.3"
 	},
 	"dependencies": {
+		"semver": "^7.7.1",
 		"yaml": "^2.7.0"
 	}
 }

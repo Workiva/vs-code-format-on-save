@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ProjectFormatter } from './project_formatter';
+import { outputChannel } from './utils';
 
 let formatter: ProjectFormatter | undefined
 
@@ -8,8 +9,6 @@ let formatter: ProjectFormatter | undefined
 export async function activate(context: vscode.ExtensionContext) {
 	let root = (vscode.workspace.workspaceFolders ?? [])[0]?.uri?.path;
 	if (root == null) return;
-
-	const outputChannel = vscode.window.createOutputChannel('OverReact Format');
 
 	formatter = new ProjectFormatter(root);
 	await formatter.init();
@@ -30,7 +29,8 @@ export async function activate(context: vscode.ExtensionContext) {
 					
 					return [vscode.TextEdit.replace(range, newContent)];
 				} catch (e) {
-					// this could just be because of a parsing error, dont display the error to the user
+					// this could just be because of a parsing error, shouldn't
+					// be displayed to the user
 					outputChannel.appendLine(`Error running formatter: ${e}`)
 
 					return [];

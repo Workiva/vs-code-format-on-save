@@ -3,6 +3,8 @@ import {join} from 'path';
 
 import fs from 'fs/promises';
 
+export const outputChannel = vscode.window.createOutputChannel('OverReact Format');
+
 export function getDartBinaryPath() {
     let dartConfigPath = vscode.workspace.getConfiguration('dart').get<string>('sdkPath')
     if (dartConfigPath) join(dartConfigPath, 'bin/dart');
