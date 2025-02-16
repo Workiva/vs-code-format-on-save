@@ -26,6 +26,7 @@ export class OverReactFormatRunner implements FormatRunner {
     async format(content: string): Promise<string> {
         return new Promise((acc, rej) => {
             this.process.stdout!.once('data', (res) => acc(res.toString()));
+            this.process.stderr!.once('data', (res) => rej(res.toString()));
             this.process.stdin!.write(content);
         })
     }
