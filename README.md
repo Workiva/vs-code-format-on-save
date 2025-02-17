@@ -20,5 +20,3 @@ This is a VS Code extension that enables format on save for Dart projects. Ultim
   ```
 
 3. You're good to go!
-
-

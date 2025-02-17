@@ -8,12 +8,8 @@
 	"engines": {
 		"vscode": "^1.97.0"
 	},
-	"categories": [
-		"Other"
-	],
-	"activationEvents": [
-		"onLanguage:dart"
-	],
+	"categories": ["Other"],
+	"activationEvents": ["onLanguage:dart"],
 	"main": "./out/extension.js",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
