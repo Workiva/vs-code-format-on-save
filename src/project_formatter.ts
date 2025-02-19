@@ -47,6 +47,10 @@ export class ProjectFormatter implements vscode.Disposable{
         return formatter.format(content);
     }
 
+    async formatRanges(path: string, content: string): Promise<string[]> {
+        return [];
+    }
+
     private async determineFormatter(pkgDir: string): Promise<FormatRunner> {
         let pubspec = (await fs.readFile(path.join(pkgDir, 'pubspec.yaml'))).toString();
 
@@ -57,10 +61,10 @@ export class ProjectFormatter implements vscode.Disposable{
 
         try {
             let pubspecLock = (await fs.readFile(path.join(pkgDir, 'pubspec.lock'))).toString();
-            let overReactFormatVersion = yaml.parse(pubspecLock)['packages']['over_react_format']['version'];
+            let overReactFormatPackage = yaml.parse(pubspecLock)['packages']['over_react_format'];
 
-            const supportedOverReactVersion = '3.37.0';
-            if (semver.gte(overReactFormatVersion, supportedOverReactVersion)) {
+            const supportedOverReactVersion = '3.38.0';
+            if (overReactFormatPackage['path'] || semver.gte(overReactFormatPackage['version'], supportedOverReactVersion)) {
                 outputChannel.appendLine(`'${pkgDir}': over_react_format`);
                 return new OverReactFormatRunner(pkgDir);
             }
