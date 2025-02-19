@@ -10,12 +10,18 @@
 	},
 	"categories": ["Other"],
 	"activationEvents": ["onLanguage:dart"],
-	"main": "./out/extension.js",
+	"main": "./dist/extension.js",
 	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"package": "vsce package --no-dependencies -o ./vs-code-format-on-save.vsix"
+		"vscode:prepublish": "pnpm run package",
+		"compile": "pnpm run check-types && node esbuild.js",
+		"watch": "npm-run-all -p watch:*",
+		"watch:esbuild": "node esbuild.js --watch",
+		"watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+		"package": "pnpm run check-types && node esbuild.js --production",
+		"compile-tests": "tsc -p . --outDir out",
+		"watch-tests": "tsc -p . -w --outDir out",
+		"pretest": "pnpm run compile-tests && pnpm run compile",
+		"check-types": "tsc --noEmit"
 	},
 	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {
@@ -23,7 +29,9 @@
 		"@types/semver": "^7.5.8",
 		"@types/vscode": "^1.97.0",
 		"@vscode/vsce": "^3.2.2",
-		"typescript": "^5.7.3"
+		"typescript": "^5.7.3",
+		"esbuild": "^0.24.2",
+		"npm-run-all": "^4.1.5"
 	},
 	"dependencies": {
 		"semver": "^7.7.1",

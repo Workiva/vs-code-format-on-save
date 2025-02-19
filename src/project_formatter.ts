@@ -1,4 +1,4 @@
-import { searchFilesByName } from './utils';
+import { outputChannel, searchFilesByName } from './utils';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
@@ -51,6 +51,7 @@ export class ProjectFormatter implements vscode.Disposable{
         let pubspec = (await fs.readFile(path.join(pkgDir, 'pubspec.yaml'))).toString();
 
         if (!pubspec.includes('  over_react_format:')) {
+            outputChannel.appendLine(`'${pkgDir}': dart format`);
             return new DartFormatRunner();
         }
 
@@ -60,6 +61,7 @@ export class ProjectFormatter implements vscode.Disposable{
 
             const supportedOverReactVersion = '3.37.0';
             if (semver.gte(overReactFormatVersion, supportedOverReactVersion)) {
+                outputChannel.appendLine(`'${pkgDir}': over_react_format`);
                 return new OverReactFormatRunner(pkgDir);
             }
             throw Error(`over_react_format must be greater than v${supportedOverReactVersion}`)
@@ -71,7 +73,7 @@ export class ProjectFormatter implements vscode.Disposable{
                 message = e.message;
             }
 
-            vscode.window.showErrorMessage(`Unable format with over_react_format. Disabling formatting.\nReason: '${message}'`);
+            outputChannel.appendLine(`'${pkgDir}': no op formatter (Reason: '${message}')`)
 
             return new NoOpFormatRunner();
         }

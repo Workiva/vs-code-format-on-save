@@ -7,8 +7,11 @@ let formatter: ProjectFormatter | undefined
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
+	outputChannel.appendLine('Initializing OverReactFormat')
+	
 	let root = (vscode.workspace.workspaceFolders ?? [])[0]?.uri?.path;
 	if (root == null) return;
+
 
 	formatter = new ProjectFormatter(root);
 	await formatter.init();
