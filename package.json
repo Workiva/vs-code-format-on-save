@@ -10,31 +10,17 @@
 	},
 	"categories": ["Other"],
 	"activationEvents": ["onLanguage:dart"],
-	"main": "./dist/extension.js",
+	"main": "./out/extension.js",
 	"scripts": {
-		"vscode:prepublish": "pnpm run package",
-		"compile": "pnpm run check-types && node esbuild.js",
-		"watch": "npm-run-all -p watch:*",
-		"watch:esbuild": "node esbuild.js --watch",
-		"watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-		"package": "pnpm run check-types && node esbuild.js --production",
-		"compile-tests": "tsc -p . --outDir out",
-		"watch-tests": "tsc -p . -w --outDir out",
-		"pretest": "pnpm run compile-tests && pnpm run compile",
-		"check-types": "tsc --noEmit"
+		"vscode:prepublish": "pnpm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
 	},
 	"icon": "images/OverReact_Logo.png",
 	"devDependencies": {
 		"@types/node": "20.x",
-		"@types/semver": "^7.5.8",
 		"@types/vscode": "^1.97.0",
-		"@vscode/vsce": "^3.2.2",
 		"typescript": "^5.7.3",
-		"esbuild": "^0.24.2",
-		"npm-run-all": "^4.1.5"
-	},
-	"dependencies": {
-		"semver": "^7.7.1",
-		"yaml": "^2.7.0"
+		"esbuild": "^0.24.2"
 	}
 }

@@ -2,8 +2,6 @@ import { outputChannel, searchFilesByName } from './utils';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import * as yaml from 'yaml';
-import semver from 'semver';
 import { FormatRunner } from './format_runners/format_runner';
 import { OverReactFormatRunner } from './format_runners/over_react_format_runner';
 import { DartFormatRunner } from './format_runners/dart_format_runner';
@@ -61,10 +59,14 @@ export class ProjectFormatter implements vscode.Disposable{
 
         try {
             let pubspecLock = (await fs.readFile(path.join(pkgDir, 'pubspec.lock'))).toString();
-            let overReactFormatPackage = yaml.parse(pubspecLock)['packages']['over_react_format'];
 
-            const supportedOverReactVersion = '3.38.0';
-            if (overReactFormatPackage['path'] || semver.gte(overReactFormatPackage['version'], supportedOverReactVersion)) {
+            let overReactFormatVersion = pubspecLock.match(/over_react_format:[\s\S]+?version:.*(\d+\.\d+\.\d+)/)?.[1]
+            if (overReactFormatVersion == null) {
+                throw Error('over_react_format exists in the pubspec, but not the lockfile. \'run pub get\' to resolve')
+            }
+
+            const supportedOverReactVersion = '3.39.0';
+            if (semverGte(overReactFormatVersion, supportedOverReactVersion)) {
                 outputChannel.appendLine(`'${pkgDir}': over_react_format`);
                 return new OverReactFormatRunner(pkgDir);
             }
@@ -83,3 +85,21 @@ export class ProjectFormatter implements vscode.Disposable{
         }
     }
 }
+
+function semverGte(version1: string, version2: string) {
+    const parseVersion = (version: string) => version.split('.').map(parseInt);
+  
+    const v1 = parseVersion(version1);
+    const v2 = parseVersion(version2);
+  
+    for (let i = 0; i < Math.max(v1.length, v2.length); i++) {
+      const num1 = v1[i] || 0; // Treat missing segments as 0
+      const num2 = v2[i] || 0;
+  
+      if (num1 > num2) return true;
+      if (num1 < num2) return false;
+    }
+  
+    return true; // versions are equal
+  }
+  

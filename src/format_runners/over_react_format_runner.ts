@@ -33,12 +33,12 @@ export class OverReactFormatRunner implements FormatRunner {
                 // over_react_format separates files using the File Separator character
                 // when content ends with this, we know the formatted file has been
                 // fully sent
-                if (aggregate.endsWith('\u001E')) {
+                if (aggregate.endsWith('\u001C')) {
                     acc(aggregate.slice(0, aggregate.length - 1));
                 }
             });
             this.process.stderr!.once('data', (res) => rej(res.toString()));
-            this.process.stdin!.write(content + '\u001E');
+            this.process.stdin!.write(content + '\u001C');
         })
     }
 }
