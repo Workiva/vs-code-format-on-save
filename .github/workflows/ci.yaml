@@ -22,57 +22,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install Node.js
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 17
-      - name: install dependencies
-        run: |
-          yarn install
+          node-version: 22
 
-      - name: Compile
-        run: yarn compile
-
-      - name: Lint
-        run: yarn lint
-
-      - name: What is the OS
-        run: cat /etc/*-release
-
-      # Tests if using Linux
-      - name: install xvfb
-        run: sudo apt-get update && sudo apt-get install -y xvfb
-        if: runner.os == 'Linux'
-
-      - name: Run Tests and Generate XML Report
-        run: xvfb-run -a yarn test
-        if: runner.os == 'Linux'
-
-      # Tests if not using Linux
-      - name: Non-Linux Tests
-        run: yarn test
-        if: runner.os != 'Linux'
-
-      - name: Debug Path
-        run: ls -R out
-
-      - name: Upload XML Test Report
-        uses: actions/upload-artifact@v4
+      - uses: pnpm/action-setup@v4
         with:
-          name: test-reports
-          path: out/test
+          version: 10
+      - run: pnpm install
 
-      - name: Upload Test Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Artifacts
-          path: artifacts/file.txt
-
-      # Generate vsix file and upload the artifact
       - name: generate .vsix file
-        run: yarn package
+        run: npx @vscode/vsce package --no-dependencies
 
       - name: Upload .vsix Artifact
         uses: actions/upload-artifact@v4
