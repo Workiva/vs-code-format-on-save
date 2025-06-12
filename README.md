@@ -8,8 +8,8 @@ This is a VS Code extension that enables format on save for Dart projects. Ultim
 
     ```
     pushd /tmp
-    wget https://github.com/Workiva/vs-code-format-on-save/archive/refs/tags/1.0.3.zip
-    unar 1.0.3.zip && code --install-extension vs-code-format-on-save-1.0.3/over-react-format-on-save-1.0.2.vsix
+    wget https://github.com/Workiva/vs-code-format-on-save/archive/refs/tags/1.0.3.zip && unar 1.0.3.zip
+    code --install-extension vs-code-format-on-save-1.0.3/over-react-format-on-save-1.0.2.vsix
     popd
     ```
 
