@@ -4,14 +4,14 @@ This is a VS Code extension that enables format on save for Dart projects. Ultim
 ## Setting up the extension
 1. __Install the extension:__ The extension is installed via the `.vsix` file. In this package, there is a `over-react-format-on-save-x.x.x.vsix` file. Download that file locally, and follow [these instructions](https://code.visualstudio.com/api/working-with-extensions/publishing-extension#packaging-extensions) to install it.
 
-  Or just install it:
+    Or just install it:
 
-  ```
-  #!/usr/bin/env bash
-  wget https://github.com/Workiva/vs-code-format-on-save/archive/refs/tags/1.0.3.zip
-  unar 1.0.3.zip
-  code --install-extension vs-code-format-on-save-1.0.3/over-react-format-on-save-1.0.2.vsix
-  ```
+    ```
+    #!/usr/bin/env bash
+    wget https://github.com/Workiva/vs-code-format-on-save/archive/refs/tags/1.0.3.zip
+    unar 1.0.3.zip
+    code --install-extension vs-code-format-on-save-1.0.3/over-react-format-on-save-1.0.2.vsix
+    ```
 
 1. __Enable the formatter:__ Open the Command Palette (__&#8984; + &#8679; + P__ by default) and search for `OverReact Format on Save: Enable`. This will allow the formatter to be run, and can be disabled by using the `OverReact Format on Save: Disable` command.
 1. You're good to go!
