@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    registries:
+      - npm-registry
+      - git-registry
+registries:
+    npm-registry:
+      type: npm-registry
+      url: https://workivaeast.jfrog.io/workivaeast/api/npm/npm-prod/
+      username: ${{ secrets.NPM_REGISTRY_WORKIVAEAST_JFROG_IO_WORKIVAEAST_API_NPM_PROD_USERNAME }}
+      password: ${{ secrets.NPM_REGISTRY_WORKIVAEAST_JFROG_IO_WORKIVAEAST_API_NPM_PROD_PASSWORD }}
+      replaces-base: true
+    git-registry:
+      type: git
+      url: https://github.com
+      username: ${{ secrets.WK_GITHUB_USER }}
+      password: ${{ secrets.WK_GITHUB_PASS }}
