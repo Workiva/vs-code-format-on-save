@@ -1,3 +1,9 @@
+[![Slack Channel](https://img.shields.io/badge/Support_Channel-Slack-purple)](https://slack.com/app_redirect?channel=support-frontend-dx)
+[![Maintainer](https://img.shields.io/badge/maintainer-FEDX-silver)](https://wiki.atl.workiva.net/display/FEF/Frontend+Dev+Experience)
+[![Documentation](https://img.shields.io/badge/Additional_Documentation-blue)](https://frontend.workiva.dev)
+[![CI](https://github.com/Workiva/vs-code-format-on-save/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/Workiva/vs-code-format-on-save/actions/workflows/ci.yaml)
+[![codecov](https://codecov.io/gh/Workiva/vs-code-format-on-save/branch/master/graph/badge.svg?token=7S7VXS0TSJ)](https://codecov.io/gh/Workiva/vs-code-format-on-save)
+
 # OverReact Format on Save VS Code Extension
 This is a VS Code extension that enables format on save for Dart projects. Ultimately, `dartfmt` will be run on save to format the modified file. In addition to providing a convenient formatting option for Dart projects, a primary focus of the extension is to utilize `OverReact Format`. For those using [OverReact](https://github.com/Workiva/over_react), there are [formatting challenges](https://github.com/Workiva/over_react#component-formatting) that come with running `dartfmt`. Therefore, the extension will check for `over_react_format: ^3.1.0` as a dev_dependency and use that if it is available. If not, the default is to run `dartfmt`.
 
