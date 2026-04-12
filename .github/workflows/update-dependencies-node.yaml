@@ -13,7 +13,6 @@ permissions:
 
 jobs:
   update-deps:
-    # prevent this scheduled action from running on forks
     uses: Workiva/gha-ts/.github/workflows/update-deps.yaml@v0.1.34
     with:
       package-path: .
