@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import * as path from 'path';
-import * as Mocha from 'mocha';
-import * as glob from 'glob';
+import Mocha = require('mocha');
+import glob = require('glob');
 
 export function run(): Promise<void> {
   const mocha = new Mocha({

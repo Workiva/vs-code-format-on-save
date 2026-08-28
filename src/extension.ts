@@ -65,9 +65,9 @@ class RunFormatOnSave {
 
 	startProcess(fileName: string) : process.ChildProcess {
 		// Config variables
-		const customLineLength = this.config.get<Number>('customLineLength', 0);
-		const shouldDetectLineLength = this.config.get<Boolean>('detectCustomLineLength');
-		const shouldScanForNestedPackages = this.config.get<Boolean>('scanForNestedProjects');
+		const customLineLength = this.config.get<number>('customLineLength', 0);
+		const shouldDetectLineLength = this.config.get<boolean>('detectCustomLineLength');
+		const shouldScanForNestedPackages = this.config.get<boolean>('scanForNestedProjects');
 
 		const shouldUseCustomLineLength = customLineLength > 0;
 		const executable = 'dart';
