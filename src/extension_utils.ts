@@ -13,7 +13,7 @@
 // limitations under the License.
 import * as yaml from 'yaml';
 import { satisfies, minVersion, parse } from 'semver';
-import { isString } from 'util';
+const isString = (value: unknown): value is string => typeof value === 'string';
 
 const dependencyKey = 'dependencies';
 const devDependencyKey = 'dev_dependencies';
